@@ -1,0 +1,2 @@
+/* minor tweaks for GitHub Pages shell */
+#page:not(.shell) { display: contents; }

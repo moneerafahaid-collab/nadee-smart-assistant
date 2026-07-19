@@ -23,17 +23,15 @@ python manage.py runserver
 
 بيانات المعرفة تُحمَّل من `data/nadee_seed.json`.
 
-## الاستضافة (من GitHub)
+## الاستعراض على GitHub Pages
 
-GitHub Pages لا يشغّل تطبيقات Django. انشر المشروع من المستودع عبر **Render**:
+نسخة استعراض ثابتة (واجهة + مساعد + قاعدة معرفة + تحليل المجالات):
 
-1. ادخل: https://dashboard.render.com
-2. سجّل الدخول بـ **GitHub** واربط المستودع `nadee-smart-assistant`
-3. اختر **New → Blueprint** أو **Web Service** من نفس المستودع
-4. Render يقرأ `render.yaml` تلقائياً ويكمل النشر
-5. بعد انتهاء البناء ستحصل على رابط مثل: `https://nadee-smart-assistant.onrender.com`
+**https://moneerafahaid-collab.github.io/nadee-smart-assistant/**
 
-حساب الدخول بعد النشر: `employee` / `Nadee@123`
+ادخل بأي اسم مستخدم ثم استعرض الأقسام. الملفات في مجلد `docs/`.
+
+> النسخة الكاملة بـ Django تُشغَّل محلياً عبر `python manage.py runserver`.
 
 ## حسابات تجريبية
 
