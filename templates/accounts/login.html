@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}تسجيل الدخول | مساعد نضيء الذكي{% endblock %}
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-mark">ن</span>
+      <span>مساعد نضيء الذكي</span>
+    </div>
+    <h1>تسجيل الدخول</h1>
+    <p class="lead">دخول منسوبي أمانة المنطقة إلى نظام إدارة البيانات.</p>
+    <form method="post" class="form-stack">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <label>
+        {{ form.username.label }}
+        {{ form.username }}
+        {{ form.username.errors }}
+      </label>
+      <label>
+        {{ form.password.label }}
+        {{ form.password }}
+        {{ form.password.errors }}
+      </label>
+      <button class="btn btn-primary" type="submit">دخول</button>
+    </form>
+    <p class="meta" style="margin-top:1rem;">
+      ليس لديك حساب؟ <a href="{% url 'accounts:register' %}">إنشاء حساب موظف</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

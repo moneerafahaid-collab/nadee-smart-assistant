@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}المساعد الذكي | مساعد نضيء{% endblock %}
+
+{% block content %}
+<div class="chat-layout">
+  <aside class="chat-side">
+    <h3>أسئلة من دليل نضيء</h3>
+    <div class="chip-list">
+      <button type="button" class="chip" data-suggest="ما هو المؤشر الوطني للبيانات نضيء؟">ما هو نضيء؟</button>
+      <button type="button" class="chip" data-suggest="ما هي عناصر المؤشر الوطني للبيانات نضيء؟">عناصر المؤشر</button>
+      <button type="button" class="chip" data-suggest="كم عدد مجالات ومعايير نضج إدارة البيانات في نضيء؟">المجالات والمعايير</button>
+      <button type="button" class="chip" data-suggest="ما هي مستويات النضج الستة في مؤشر نضيء؟">مستويات النضج</button>
+      <button type="button" class="chip" data-suggest="ما هي الوثائق الداعمة أو المرفقات في نضيء؟">الوثائق الداعمة</button>
+      <button type="button" class="chip" data-suggest="مجال جودة البيانات">مجال جودة البيانات</button>
+      <button type="button" class="chip" data-suggest="مجال حماية البيانات الشخصية">حماية البيانات الشخصية</button>
+    </div>
+    <h3 style="margin-top:1.4rem;">من قاعدة المعرفة</h3>
+    <div class="chip-list">
+      {% for article in sample_articles %}
+      <a class="chip" href="{% url 'chatbot:knowledge_detail' article.pk %}">{{ article.title }}</a>
+      {% empty %}
+      <p class="meta">شغّل أمر التهيئة لتحميل بيانات نضيء.</p>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <section class="chat-main">
+    <div class="chat-toolbar">
+      <h1>المساعد الذكي</h1>
+      <p>إجابات من دليل المؤشر الوطني للبيانات (نضيء) — دورة القياس الثالثة / سدايا</p>
+    </div>
+
+    <div class="messages" id="messages">
+      {% if not messages %}
+      <div class="bubble assistant">مرحباً، أنا مساعد نضيء الذكي. اسألني عن المجالات، المعايير، مستويات النضج، أو الوثائق الداعمة.</div>
+      {% endif %}
+      {% for message in messages %}
+      <div class="bubble {{ message.role }}">{{ message.content }}</div>
+      {% endfor %}
+    </div>
+
+    <form class="composer" id="chat-form" data-url="{% url 'chatbot:send' %}">
+      {% csrf_token %}
+      <input type="hidden" id="session-id" value="{{ session.id }}">
+      <input class="chat-input" id="chat-input" type="text" placeholder="اسأل عن نضيء: المجالات، الامتثال، المرفقات..." autocomplete="off" required>
+      <button class="btn btn-primary" type="submit">إرسال</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

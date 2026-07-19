@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}إنشاء حساب | مساعد نضيء الذكي{% endblock %}
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-mark">ن</span>
+      <span>مساعد نضيء الذكي</span>
+    </div>
+    <h1>تسجيل موظف</h1>
+    <p class="lead">إنشاء حساب داخلي للوصول إلى المساعد وقاعدة المعرفة.</p>
+    <form method="post" class="form-stack">
+      {% csrf_token %}
+      {% for field in form %}
+      <label>
+        {{ field.label }}
+        {{ field }}
+        {{ field.errors }}
+      </label>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">إنشاء الحساب</button>
+    </form>
+    <p class="meta" style="margin-top:1rem;">
+      لديك حساب؟ <a href="{% url 'accounts:login' %}">تسجيل الدخول</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} | قاعدة المعرفة{% endblock %}
+
+{% block content %}
+<section class="section">
+  <a class="meta" href="{% url 'chatbot:knowledge' %}">← العودة لقاعدة المعرفة</a>
+  <div class="panel" style="margin-top:1rem;">
+    <span class="tag">{{ article.get_category_display }}</span>
+    <h1 style="font-family:var(--font-display);margin:0.7rem 0;">{{ article.title }}</h1>
+    <p class="meta">المصدر: {{ article.source }}</p>
+    <div style="margin-top:1.2rem;line-height:1.9;white-space:pre-wrap;">{{ article.content }}</div>
+  </div>
+</section>
+{% endblock %}

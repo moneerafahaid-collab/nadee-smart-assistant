@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}تحليل الأداء | مساعد نضيء{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <h2>تحليل أداء إدارة البيانات — نضيء</h2>
+    <p>متابعة نضج المجالات الأربعة عشر، التوقعات، العوامل المؤثرة، والتنبيهات العملية.</p>
+  </div>
+
+  <div class="metric-strip" style="margin-bottom:1.2rem;">
+    <div class="metric">
+      <strong>{{ avg_maturity }}</strong>
+      <span>متوسط نضج المجالات / 5</span>
+    </div>
+    <div class="metric">
+      <strong>{{ total_criteria }}</strong>
+      <span>إجمالي المعايير (من 42)</span>
+    </div>
+    <div class="metric">
+      <strong>{% if forecast.next_maturity %}{{ forecast.next_maturity }}{% else %}—{% endif %}</strong>
+      <span>توقع الشهر القادم ({{ forecast.trend }})</span>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:1rem;overflow-x:auto;">
+    <h3 style="margin-top:0;font-family:var(--font-display);color:var(--navy);">مجالات قياس نضج الممارسات</h3>
+    <table class="domains-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>المجال</th>
+          <th>الركيزة</th>
+          <th>المعايير</th>
+          <th>النضج</th>
+          <th>المستوى</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in domains %}
+        <tr>
+          <td>{{ d.order }}</td>
+          <td>{{ d.name }}</td>
+          <td>{{ d.pillar }}</td>
+          <td>{{ d.criteria_count }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:0.55rem;">
+              <span>{{ d.maturity_score }}</span>
+              <div class="bar"><span style="width:{% widthratio d.maturity_score 5 100 %}%"></span></div>
+            </div>
+          </td>
+          <td><span class="tag">{{ d.maturity_label }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">المجموع</td>
+          <td>{{ total_criteria }}</td>
+          <td colspan="2">{{ avg_maturity }} متوسط النضج</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h3 style="margin-top:0;font-family:var(--font-display);color:var(--navy);">مؤشرات الأشهر</h3>
+      <div class="chart-box">
+        <canvas id="performanceChart"></canvas>
+      </div>
+      <p class="meta" style="margin-top:0.8rem;">{{ forecast.message }}</p>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-top:0;font-family:var(--font-display);color:var(--navy);">تنبيهات واقتراحات</h3>
+      {% for alert in alerts %}
+      <article class="alert {{ alert.severity }}">
+        <h4>{{ alert.title }}</h4>
+        <p>{{ alert.message }}</p>
+        <p><strong>اقتراح:</strong> {{ alert.suggestion }}</p>
+      </article>
+      {% empty %}
+      <p class="meta">لا توجد تنبيهات مفتوحة حالياً.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:1rem;">
+    <div class="panel">
+      <h3 style="margin-top:0;font-family:var(--font-display);color:var(--navy);">العوامل المؤثرة على النضج</h3>
+      {% for factor in factors %}
+      <div class="factor">
+        <div>
+          <strong>{{ factor.name }}</strong>
+          <p class="meta" style="margin:0.25rem 0 0;">{{ factor.description }}</p>
+        </div>
+        <span class="tag {{ factor.impact }}">{{ factor.get_impact_display }}</span>
+      </div>
+      {% empty %}
+      <p class="meta">لا توجد عوامل مسجّلة.</p>
+      {% endfor %}
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-top:0;font-family:var(--font-display);color:var(--navy);">آخر تقييم شهري</h3>
+      {% if latest %}
+      <p class="meta">الفترة: {{ latest.year }}/{{ latest.month|stringformat:"02d" }}</p>
+      <p><strong>درجة النضج العامة:</strong> {{ latest.maturity_score }} ({{ latest.maturity_label }})</p>
+      <p><strong>نسبة الإنجاز:</strong> {{ latest.completion_rate }}%</p>
+      <p><strong>زمن الاستجابة:</strong> {{ latest.response_time_hours }} ساعة</p>
+      <p><strong>الطلبات:</strong> مفتوح {{ latest.open_tickets }} / مغلق {{ latest.closed_tickets }}</p>
+      {% else %}
+      <p class="meta">لا توجد سجلات أداء بعد.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const chartData = {{ chart_json|safe }};
+  const ctx = document.getElementById("performanceChart");
+  if (ctx && chartData.labels.length) {
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: chartData.labels,
+        datasets: [
+          {
+            label: "درجة النضج",
+            data: chartData.maturity,
+            borderColor: "#1a2b68",
+            backgroundColor: "rgba(26,43,104,0.12)",
+            tension: 0.35,
+            yAxisID: "y",
+          },
+          {
+            label: "نسبة الإنجاز %",
+            data: chartData.completion,
+            borderColor: "#2bb673",
+            backgroundColor: "rgba(43,182,115,0.10)",
+            tension: 0.35,
+            yAxisID: "y1",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", rtl: true, labels: { font: { family: "Cairo" } } } },
+        scales: {
+          y: { type: "linear", position: "right", min: 0, max: 5, title: { display: true, text: "النضج" } },
+          y1: { type: "linear", position: "left", min: 0, max: 100, grid: { drawOnChartArea: false }, title: { display: true, text: "الإنجاز %" } },
+        },
+      },
+    });
+  }
+</script>
+{% endblock %}

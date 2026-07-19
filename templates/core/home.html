@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}مساعد نضيء الذكي | الرئيسية{% endblock %}
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="shell" style="padding-top:0;padding-bottom:0;width:min(1180px,92vw);">
+    <p class="hero-brand">مساعد نضيء الذكي</p>
+    <h2>المؤشر الوطني للبيانات — دورة القياس الثالثة</h2>
+    <p>
+      نظام داخلي لمنسوبي أمانة المنطقة ضمن إدارة البيانات، يجيب عن استفسارات نضيء
+      من دليل سدايا: المجالات، المعايير، مستويات النضج، والوثائق الداعمة.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="{% url 'chatbot:home' %}">ابدأ المحادثة</a>
+      <a class="btn btn-ghost" href="{% url 'analytics:dashboard' %}">تحليل نضج المجالات</a>
+    </div>
+  </div>
+</section>
+
+<div class="shell">
+  <section class="section">
+    <div class="section-head">
+      <h2>عناصر المؤشر</h2>
+      <p>يتكون مؤشر نضيء من ثلاثة عناصر رئيسية وفق دليل دورة القياس الثالثة.</p>
+    </div>
+    <div class="elements-grid">
+      <article class="element-card maturity">
+        <header>قياس نضج الممارسات</header>
+        <div class="body">مدى تطبيق أفضل ممارسات إدارة البيانات عبر 14 مجالاً.</div>
+        <footer>42 معياراً</footer>
+      </article>
+      <article class="element-card compliance">
+        <header>قياس الامتثال</header>
+        <div class="body">التزام الجهة بضوابط ومواصفات إدارة البيانات وحماية البيانات الشخصية.</div>
+        <footer>191 مواصفة</footer>
+      </article>
+      <article class="element-card ops">
+        <header>قياس التميز التشغيلي</header>
+        <div class="body">متابعة التقدم التشغيلي في المجالات ذات العلاقة بالبيانات.</div>
+        <footer>22 معياراً</footer>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>لمحة سريعة</h2>
+      <p>مؤشرات جاهزية المعرفة وحالة نضج إدارة البيانات.</p>
+    </div>
+    <div class="metric-strip">
+      <div class="metric">
+        <strong>{{ article_count }}</strong>
+        <span>مادة من دليل نضيء</span>
+      </div>
+      <div class="metric">
+        <strong>{{ domain_count }}</strong>
+        <span>مجال إدارة بيانات</span>
+      </div>
+      <div class="metric">
+        <strong>{% if latest %}{{ latest.maturity_score }}{% else %}—{% endif %}</strong>
+        <span>آخر درجة نضج عامة{% if latest %} ({{ latest.maturity_label }}){% endif %}</span>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

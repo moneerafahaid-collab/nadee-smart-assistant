@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}مساعد نضيء الذكي{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <header class="site-header">
+    <a class="brand" href="{% url 'core:home' %}">
+      <span class="brand-mark">ن</span>
+      <span>مساعد نضيء الذكي</span>
+    </a>
+    <nav class="nav-links">
+      <a href="{% url 'core:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">الرئيسية</a>
+      <a href="{% url 'chatbot:home' %}" class="{% if request.resolver_match.app_name == 'chatbot' and request.resolver_match.url_name == 'home' %}active{% endif %}">المساعد الذكي</a>
+      <a href="{% url 'chatbot:knowledge' %}" class="{% if 'knowledge' in request.resolver_match.url_name %}active{% endif %}">قاعدة المعرفة</a>
+      <a href="{% url 'analytics:dashboard' %}" class="{% if request.resolver_match.app_name == 'analytics' %}active{% endif %}">تحليل الأداء</a>
+      <a href="{% url 'core:about' %}">عن المنصة</a>
+      <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost" style="padding:0.35rem 0.8rem;font-size:0.9rem;">خروج</button>
+      </form>
+    </nav>
+  </header>
+  {% endif %}
+
+  <main class="{% block main_class %}shell{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
