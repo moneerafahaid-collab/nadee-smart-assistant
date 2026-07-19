@@ -10,7 +10,7 @@
 - Django
 - SQLite
 
-## التشغيل
+## التشغيل محلياً
 
 ```bash
 pip install -r requirements.txt
@@ -22,6 +22,18 @@ python manage.py runserver
 ثم افتح: http://127.0.0.1:8000/
 
 بيانات المعرفة تُحمَّل من `data/nadee_seed.json`.
+
+## الاستضافة (من GitHub)
+
+GitHub Pages لا يشغّل تطبيقات Django. انشر المشروع من المستودع عبر **Render**:
+
+1. ادخل: https://dashboard.render.com
+2. سجّل الدخول بـ **GitHub** واربط المستودع `nadee-smart-assistant`
+3. اختر **New → Blueprint** أو **Web Service** من نفس المستودع
+4. Render يقرأ `render.yaml` تلقائياً ويكمل النشر
+5. بعد انتهاء البناء ستحصل على رابط مثل: `https://nadee-smart-assistant.onrender.com`
+
+حساب الدخول بعد النشر: `employee` / `Nadee@123`
 
 ## حسابات تجريبية
 
